@@ -63,7 +63,56 @@ if (y>0){
 
 **Ejemplo:** Tipo de Bono
 
+```{R}
+Sector_Emisor <- "Industria_Textil"
+Vencimiento <- 5
 
+if ( (Sector_Emisor=="Gobierno") | (Sector_Emisor=="GOBIERNO")){
+    if(Vencimiento<=1){
+        Clasif_Bono <- "GOB_CORTO"
+    }else if (Vencimiento<=3){
+        Clasif_Bono <- "GOB_MEDIO"
+    }else{Clasif_Bono <- "GOB_LARGO"}
+}else if ((Sector_Emisor=="Financiero") | (Sector_Emisor=="FINANCIERO")){
+        if(Vencimiento<=1){
+            Clasif_Bono <- "FIN_CORTO"
+        }else if(Vencimiento>=3){
+            Clasif_Bono <- "FIN_MEDIO"
+        }else{Clasif_Bono <- "FIN_LARGO"}
+}else {
+        if(Vencimiento<=1){
+            Clasif_Bono <- "NOFIN_CORTO"
+        }else if (Vencimiento<=3){
+            Clasif_Bono <- "NOFIN_MEDIO"
+        }else{Clasif_Bono <- "NOFIN_LARGO"}
+}
+Clasif_Bono
+
+```
+
+**Ejemplo:** Múltiplos de 4
+
+```{R}
+m <- 15
+cociente <- floor(m/4)
+if(m%%4 ==0){
+    paste(m,"es de la forma 4k, con k=", cociente)
+}else if(m%%4==1){
+    paste(m,"es de la fomra 4k+1, con k=", cociente)
+}else if(m%%4==2){
+    paste(m,"es de la forma 4k+2, con k=", cociente)
+}else {paste(m,"es de la forma 4k+3,con k=", cociente)}
+```
+
+A menudo sucede, como en el ejemplo anterior, que tenemos difernetes opciones dependiendo del valor de una variable. Para evitar la concatenación de excesivos condicionales if, tenemos a nuestra disposición la estructura **switch**:
+
+|***switch(varaible, expresión1, expresión2, ...,expresionN)***|
+|:-------------------------------:|
+|Si **varaible** es un entero positivo i, entonces se ejecuta la expresión i-ésima.|
+
+|***switch(varaible, string1=expresión1, ..., stringN=expresiónN)***|
+|:---------------------------------:|
+|Si **variable** es del tipo cadena de caracteres, entonces se ejecuta la expresión cuyo identificador coincida con el contenido de la variable. A diferencia del caso numérico, en caso de no coincidencia de la variable con los indetificadores, se ejectura la expresión por defecto **default**.|
 
 
 
