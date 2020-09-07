@@ -1,0 +1,68 @@
+---
+title: "Introducción a la Programación en R"
+author: "Mihai M. Craiu"
+date: "7/9/2020"
+output: pdf_document
+---
+
+## Condicionales 
+
+Las **estructuras selectivas** o **condicionales** son aquellas que nos permten hacer una seleccion entre dos o varias rutas de ejecución posible. La selección se llevará a cabo según el valor de una condicioón. en lo sucesivo entenderemos por expresion a cualquier agrupación de comandos entre llaves, bien separadas por punto y coma, o bien por salto de línea. La primera estructura condcional que vamos a conocer es **if**, y no es más que un **si condicional:**
+
+|***if (condición1) expresión1***|
+|:---------------------------------------: |
+|Si la condicion de **condición1** se verifica (TRUE), entonces la sentencia a ejecutar recogida en *expresión1* se lleva a cabo. Si el resultado de la evaluación es falso, la sentencia a ejecutar simplemente se ignora.|  
+
+**Ejemplo:** Número positivo
+```{R}
+x <- 20
+if (x>0) {paste(x,"es positivo")}
+```
+
+**Ejemplo:** Número positivo, negativo o cero
+
+```{R}
+y <- -15
+if (y>0) {paste(y, "es positivo")}
+if (y==0) {paste(y,"es cero")}
+if (y<0) {paste(y, "es negativo")}
+```
+
+**Ejemplo:** Número par o impar (supone un uso interactivo de R)
+
+`n <- readline(prompt = "Introduzca un entero: ")`  
+`n <- as.numeric(n)`  
+`if (n%%2 == 0) {paste(n, "es par")}`  
+`if (n%%2 == 1) {paste(n, "es impar")}`  
+
+En los dos últimos ejemplos hemos visto que a veces necesitamos que una sentencia se ejecute cuando se cumple la condición, y que otra sentencia se ejecute cuando dicha condición sea falsa. Si nos encontramos en este caso, la forma de resolverlo únicamente a través de sentencias **if** es engorrosa y poco práctica, por lo que existe otra forma más sencilla para llevar a cabo dicha tarea: la estructura **if-else:**:
+
+|if (condición1) expresión1 else expresión2|
+|:----------------------------------------:|
+|Si **condición1** es evaluada com verdadera, entonces se ejecuta la **expresión1**, en cambio, cuando la c ondición se evalúa como falsa, se ejecuta la **expresión2**|
+
+Las estructuras if-else se pueden **anidar** y el lenguaje R dispone además de una version vectorizada de if, *ifelse()*, sobre la que volveremos posteriormente.
+
+**Ejemplo:** Número par o impar (supone un uso interactivo de R)
+
+`n <- readline(prompt= "Introduzca un entero: ")`
+`n <- as.numeric(n)`
+`if (n%%2 == 0) {paste(n, "es par")} else {n, "es impar"}`
+
+```{R}
+y <- -15
+if (y>0){
+    paste(y, "es positivo")
+}else if (y==0){
+    paste(y, "es cero")
+}else {paste(y, "es negativo")}
+```
+
+**Ejemplo:** Tipo de Bono
+
+
+
+
+
+
+
