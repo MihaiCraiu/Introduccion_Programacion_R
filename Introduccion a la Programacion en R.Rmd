@@ -43,7 +43,7 @@ if (y<0) {paste(y, "es negativo")}
 
 En los dos últimos ejemplos hemos visto que a veces necesitamos que una sentencia se ejecute cuando se cumple la condición, y que otra sentencia se ejecute cuando dicha condición sea falsa. Si nos encontramos en este caso, la forma de resolverlo únicamente a través de sentencias **if** es engorrosa y poco práctica, por lo que existe otra forma más sencilla para llevar a cabo dicha tarea: la estructura **if-else:**:
 
-|if (condición1) expresión1 else expresión2|
+|***if (condición1) expresión1 else expresión2***|
 |:----------------------------------------:|
 |Si **condición1** es evaluada com verdadera, entonces se ejecuta la **expresión1**, en cambio, cuando la c ondición se evalúa como falsa, se ejecuta la **expresión2**|
 
@@ -229,8 +229,40 @@ all.equal(0, PyG)
 
 # Bucles
 
-Los **bucles** o **ciclos** son estructuras que nos permiten repetir la misma instrucción un 
+Los **bucles** o **ciclos** son estructuras que nos permiten repetir la misma instrucción un número determinado de veces, o hasta que se verifique cierta condición. Como veremos posteriormente, el carácter vectorial de R permite prescindir a menudo de este tipo de estructuras (que además pueden llegar a relantizar mucho la ejecución), si bien hay situaciones en que es imprescindible hacer uso de las mismas, además de ser uno de los pilares báscios de la programación. El primer bucle que veremos es el bucle **for**:
 
+|***for(variable1 in vector1) expresión1|
+|----------------------------------|
+|Se evalúa la **expresión1** para cada uno de los valroes que **variable1** toma en el **vector1**.
+
+**Ejemplos**:
+
+```{r}
+for(i in 1:10) {print(paste("Caso",toString(i)))}
+for(j in c("Madrid","Valencia","Barcelona")) {print(j)}
+suma <-0; for(i in 1:100) {suma <- suma + i}; suma
+temp <-2; for(k in c(1,3,5,7,9)) {temp<- temp + k}; temp
+```
+
+**Ejemplo**: Factorial de un número
+
+```{r}
+N <- 5
+factorial_N <- 1
+for(i in 1:N){factorial_N<- factorial_N*i}
+factorial_N
+```
+
+**Ejemplo**: Lista de pares e impares
+
+```{r}
+for(i in 1:14){
+    if(i%%2==0){print(paste(toString(i),"es par"))}
+    else{print(paste(toString(i),"es impar"))}
+}
+```
+
+Como hemos visto, el bucle *for* es muy útil para repetir algo cuando conocemos el número de repeticiones previamente. Sin emabrgo, en algunas ocasiones no es posible conocer dicho número de antemano, sino que necesitamoes un ciclo que pueda ser controaldo por una condición, y la evaluación de esta condición dependerá del estado del programa en un momento dado. El bucle **while** nos permite hacer esto:
 
 
 
