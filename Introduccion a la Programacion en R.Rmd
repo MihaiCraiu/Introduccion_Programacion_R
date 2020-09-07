@@ -227,7 +227,9 @@ all.equal(sqrt(2)^2, 2)		#Devuelve TRUE
 all.equal(0, PyG)
 ```
 
+# Bucles
 
+Los **bucles** o **ciclos** son estructuras que nos permiten repetir la misma instrucción un 
 
 
 
