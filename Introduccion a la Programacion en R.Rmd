@@ -6,9 +6,6 @@ output:
   pdf_document:
     toc: yes
     toc_depth: 2
-  word_document:
-    toc: yes
-    toc_depth: '2'
 ---
 
 # Condicionales 
@@ -231,8 +228,8 @@ all.equal(0, PyG)
 
 Los **bucles** o **ciclos** son estructuras que nos permiten repetir la misma instrucción un número determinado de veces, o hasta que se verifique cierta condición. Como veremos posteriormente, el carácter vectorial de R permite prescindir a menudo de este tipo de estructuras (que además pueden llegar a relantizar mucho la ejecución), si bien hay situaciones en que es imprescindible hacer uso de las mismas, además de ser uno de los pilares báscios de la programación. El primer bucle que veremos es el bucle **for**:
 
-|***for(variable1 in vector1) expresión1|
-|----------------------------------|
+|***for(variable1 in vector1) expresión1***|
+|:----------------------------------:|
 |Se evalúa la **expresión1** para cada uno de los valroes que **variable1** toma en el **vector1**.
 
 **Ejemplos**:
@@ -265,32 +262,491 @@ for(i in 1:14){
 Como hemos visto, el bucle *for* es muy útil para repetir algo cuando conocemos el número de repeticiones previamente. Sin emabrgo, en algunas ocasiones no es posible conocer dicho número de antemano, sino que necesitamoes un ciclo que pueda ser controaldo por una condición, y la evaluación de esta condición dependerá del estado del programa en un momento dado. El bucle **while** nos permite hacer esto:
 
 
+|***while (condición1) expresión1***|
+|:----------------------------:|
+|Se evalúa la **expresión1** mientras *condición1** es cierta|
+
+Los bucles *while*, aunque muy útiles, se emplean en la práctica menos que los bucles *for*, dado que es posible modificar estos últimos para que se interruman cuando se presenta una condición dada, como veremos posteriormente.
+
+**Ejemplo**: Contador
+
+```{r}
+i<- 1
+while(i <=10) {
+    print(paste("Caso", toString(i)))
+    i <- i+1
+}
+```
+**Ejemplo**: Factorial de un número
+
+```{r}
+N <- 5
+factorial_N <- N
+while(N > 1){
+    N <- N -1
+    factorial_N <- factorial_N * N
+}
+factorial_N
+```
+
+**Ejemplo**: Animación función coseno
+
+```{r}
+for(i in 1:2){
+    plot(cos, -i*pi, i*pi)
+    #Vamos a almacenar en una variable la hora del sistema
+    date_time <- Sys.time()
+    #Con un bucle while vamos a controlar que el programa no haga nada durante 1 segundo
+    while((Sys.time()-date_time)<1){}
+}
+```
 
 
+Una estructura similar al ciclo *while*, en cuanto a que necesita evaluar una condición de parada para concluir las iteraciones, es el bucle **repeat**:
+
+|***repeat expresión1***|
+|:----------------------:|
+|Se evalúa iterativamente la **expresión1**. Demanda una sentencia **break** para poder concluir.|
+
+Como se ha comentado, para poder concluir un bucle *repeat* es necesaria una sentencia **break**. Dicha instrucción también finaliza cualquier bucle *for* o *while*, simpre y cuando se verifique la conición que la acompaña. Por otro lado, el comando **next** dentro de un bucle también genera una interrupción del mismo, ahora bien, no de todo el bucle, sino de la iteración en que éste se encuentra.
+
+**Ejemplo**: Contador
+
+```{r}
+i <- 1
+repeat {
+    print(paste("Caso", toString(i)))
+    i <- i+1
+    if (i > 10) {break}
+}
+```
+**Ejemplo**: Parchís
+
+```{r}
+dado <- 1:6; n_tirada <- 0
+repeat {
+    n_tirada <- n_tirada + 1
+    resultado_tirada <- sample(dado, size = 1)
+    print(paste("En la tirada", toString(n_tirada),
+                "ha salido un", toString(resultado_tirada)))
+    if (resultado_tirada == 5) {
+        print("Comienzas a jugar!!")
+        break
+    }
+}
+```
+**Ejemplo**: Uso de break en for y while
+
+```{r}
+for (i in 1:100){
+    print(i)
+    if (i == 8) {break}
+}
+
+k <- 0
+while(k <=100){
+    k <- k+1
+    print(k)
+    if(k == 7) {break}
+}
+```
+
+**Ejemplo**: Uso de next
+
+```{r}
+for(i in 1:20){
+    if(i %% 3 == 0) {next}
+    print(i)
+}
+```
+## Ejecicios
+
+|**Ejercicio propuesto**: Omisión de iteraciones|
+|------------------------------------------------|
+|Escribe un bucle que imprima por pantalla los números del 1 al 20 omitiendo las iteraciones que van de la 11 a la 15.|
+
+```{r}
+for (i in 1:20){
+	if ((i>=11)&(i<=15)) {next}
+	print(i)
+}
 
 
+#ALTERNATIVA: Operador %in% (?match):
+
+for (i in 1:20) {
+  if (i %in% 11:15)
+    next
+  print(i)
+}
+```
+
+|**Ejercicio propuesto**: Valor Actual Bono|
+|-------------------------------------------|
+|Calcula el precio de mercado de un bono de nominal 100.000, que paga cupone de 1000 durante los próximos 10 años y cuyo TIR es del 3,12%.|
+
+```{r}
+VA_bono <- 0
+Cup <- 1e3
+Nominal <- 1e5
+i <- 0.0312
+for (n in 1:10) {
+	VA_bono <- VA_bono + Cup*(1+i)^(-n)
+	if(n==10){
+		VA_bono <- VA_bono + Nominal*(1+i)^(-n)
+	}
+}
+VA_bono
+```
 
 
+|**Ejercicio propuesto**: Número primo|
+|------------------------------------------------|
+|Escribe un código que permita determinar si un número es primo.|
+
+```{r}
+n <- 91
+n_primo <- TRUE
+
+for(i in 2:(sqrt(n))){
+	if (n%%i == 0) {
+		n_primo <- FALSE
+		if (n==2) {n_primo <- TRUE}
+		break
+	}
+}
+n_primo
+```
+
+|**Ejercicio propuesto**: Movimiento Browniano Geométrico|
+|--------------------------------------------------------|
+|Un activo de renta variable puede modelizarse por medio de un Movimeinto Browniano Geométrico, de tal manera que, en vritud del Lema de Itô, el valor del activo en el instante *t* viene dado por la expresión  $$S_t=S_{t-1}e^{(\mu-\frac{\sigma^2}{2})\Delta{t} + \sigma \zeta \sqrt{\Delta{t}}}$$
+ donde $\mu$ y $\sigma$ son respectivamente la deriva y la volatilidad del activo y $\zeta$ ~ N(0,1). Determina un posible valor de la cotización de una acción al cabo de 12 mese, suponiendo que $S_0$ =25, $\mu$ = 15% anual,  $\sigma$ =20% anual y $\Delta{t}$ =1 mes.| 
+
+```{r}
+P_0 <- 25
+mu <- 0.15
+sigma <- 0.20
+incr <- 1/12
+
+P_t <- P_0
+
+for(i in 1:12){
+		P_t <- P_t*exp( (mu-0.5*sigma^2)*incr + sigma*sqrt(incr)*rnorm(1) )
+}
+P_t
 
 
+#Senda: (con vectores)
+P_0 <- 25
+mu <- 0.15
+sigma <- 0.20
+incr <- 1/12
 
+P_t <- c(P_0)
 
+for(i in 1:12){
+		P_t <- c(P_t,P_t[i]*exp( (mu-0.5*sigma^2)*incr + sigma*sqrt(incr)*rnorm(1) ))
+}
+P_t
+length(P_t)
+plot(P_t)
+```
 
+|**Ejercicio propuesto**: Mímino de una función|
+|----------------------------------------------|
+|Escribe un código que permita determinar de manera aproximada el mínimo de la funcio $f(x) = 6x^2 - 36x + 55$ en el intervalo [1 , 4].|
 
+```{r}
+N_subint <- 1e3
+a <- 1
+b <- 4
+incr <- (b-a)/N_subint
 
+xmin <- 1
+ymin <- 6*xmin^2 - 36*xmin + 55
 
+x <- 1
+while (x <= 4){
+		y <- 6*x^2 - 36*x + 55
+		if (y < ymin ) {
+			xmin <- x
+			ymin <- y
+		}
+		x <- x +incr
+}
+print(paste("El mínimo se alcanza en x =",toString(xmin),", y =",toString(ymin)))
+```
 
+A la hora de programar, una parte muy importante del trabajo recae en crear código que sea eficiente, en el sentido de que desempeñen la tarea propuesta de la manera más rápida posible. Es habitaul que en los códigos más eficientes la estructura del algoritmo implementado no sea explícita, mientras que los códigos simples en los que queda totalmente claro cómo se obtienen las cantidades a determinar, suelen ser bastante lentos computacionalmente. A continuación se muestra un ejemplo de cómo podemos medir con R el tiempo en el que se lleva a cabo un algoritmo:
 
+**Ejemplo**: Medida del tiempo de ejecución
 
+```{r}
+t_inicio <- proc.time()
+for(i in 1:11){print(i)}
+t_ejec <- proc.time()-t_inicio
+t_ejec
+```
 
+Para concluir esta introdución a los bucles, comentar brevemente que en R, al igual que en otros lenguajes de programación, es posible realizar cálculos de una manera más rápida usando varios procesadores, todos ellos cooperando en una tarea determinada. Es lo como se conoce como **paralelizar** un proceso. La idea subyacente al procesamiento en paralelo es dividir la tarea entre múltiples procesadores y posteriormente volver a unir los distintos componentes. Si bien lo anterior se escapa totalmente de los objetivos del curso, se recomienda al lector interesado la lectura de la documentación del paquete de R **parallel**.
 
+# Funciones I
 
+Ya hemos hecho uso de algunas funciones de R en los ejemplos anteriores. Una **función** es un elemento del programa que contiene código y se puede ejecutar, esto es, llevar a cabo una operación determinada. La funciónpuede **llamarse** o **invocarse** cuando sea necesario, de forma que el código que se enceuntra en su interior pasa a ejecutarse; una vez que la funcion termina, el programa continúa en la sentencia siguiente. La sintaxis de una función es la siguiente:
 
+|***nombre <- funcion(arg_1, arg_2, ...) expresión1***|
+|:----------------------------------------------------:-
+|**expresión1** es una expresión de R que emplea los argumenteos, **arg_i**, para calcular un valor. El valor de la expresión1 es el valor que devuelve ka función (más concretamente, el último comando evaluado dentro de la expresión), y puede ser un numero, un vector, una lista, etc.|
+Una llamada a la función tiene habitualmente la forma 
+                    nombre(arg_1, arg_2, ...)
+                    
+**Ejemplo**: Función que multiplica dos números:
 
+```{r}
+multiplicar_numeros <- function(x,y) {x*y}
+multiplicar_numeros(2,7)
+```
 
+**Ejemplo**: Factorial de un número
 
+```{r}
+mi_factorial <- function(n){
+    factorial<-1
+    for (i in 1:n){
+        factorial <- factorial *i
+    }
+    factorial
+}
+mi_factorial(5)
+```
 
+La función se convierte en un objeto más de R, de modo que puede listar *lx()*, borrar *rm()*, etc.
+En algunos lenguajes de programación es obligatorio el uso del comando **return** para que la función deveulva un valor; sin embargo, en R no: como hemos comentado, una función de R devuelve el último valor calculado dentro de su cuerpo. Esto no impide que, en aras de una mayor claridad, podamos incluir dicho comando:
 
+**Ejemplo**: Inclusión de comando return
+
+```{r}
+eleva_cuadrado1 <- function(x){x^2}
+eleva_cuadrado1(7)
+
+eleva_cuadrado2 <- function(x){return(x^2)}
+eleva_cuadrado2(7)
+```
+
+Al invocar una función los argumentos deben proporcionarse en el orden en el que se han definido doentro de la misma, a menos que éstos se den precedidos por su nombre. Elnombre de un argumento puede omitirse siempre que se pueda distinguir del resto de argumentos. El comando *args()* nos muestra los argumetnos de cualquier función, y más aún, podemos ver el contenido de cualquier función, y que hayamos creado tecleando simplemente su nombre.
+
+**Ejemplo**: Función Exponencial
+
+```{r}
+exponencial <- function(base, exponente){base^exponente}
+exponencial(2,3)
+exponencial(3,2)
+exponencial(base=2,exponente = 3)
+exponencial(exponente = 3,base = 2)
+exponencial(exponente = 3,2)
+```
+
+En muchas ocasiones interesa que la función que vamos a definir tenga argumentos con valores por defecto. De este modo, si por alguna razón dichos argumentos son omitidos en la llamada a la función, éstos tomarán el valor asignado en la definición de la misma. Los valores por defecto pueden ser cualquier expresión, no se restringen a constantes.
+
+**Ejemplo**: Función exponencial con base e por efecto
+
+```{r, error=TRUE}
+#Recordemos que e = exp(1)
+exponencial <- function(base=exp(1),exponente){base^exponente}
+exponencial(2,3)
+exponencial(3,2)
+exponencial(base = 2, exponente = 3)
+exponencial(exponente = 2)
+exponencial(2) #no es correcto??
+exponencial(,2)
+
+```
+
+**Ejemplo**: Valor por defecto no constante
+
+```{r}
+suma <- function(a=0,b=a){a+b}
+suma(3,2); suma(5)
+```
+
+A veces puede ser interesante tener a nuestra disposición los argumentos de otras funciones. El argumento libre ... permite incluir en la definición de una función la posibilidad de invicarla incorporando los argumentos que puedan utilizar las funciones que formen parte del código de nuestra función.
+
+**Ejempo**: Funcion logaritmo
+
+```{r, error=TRUE} 
+#Recordemos la funcion logaritmo en R:
+
+log
+
+logaritmo1 <- function(x){log(x)}
+logaritmo1(10)
+logaritmo1(100,base=10)
+```
+
+**Ejemplo**: Función logaritmo con el argumento ...
+
+```{r}
+logaritmo2 <- function(x, ...){log(x,...)}
+logaritmo2(10)
+logaritmo2(100,base=10)
+```
+**Ejemplo**: Función logaritmo con el argumento ... ¿es correcto?
+
+```{r}
+logaritmo3 <- function(x, ...){log(x)}
+logaritmo3(10)
+logaritmo3(100,base=10)
+```
+
+**Ejemplo**: Gráfica
+
+```{r}
+dibuja_func <- function(x, y, ...){plot(x, y, ...)}
+dibuja_func(1:5, 6:10)
+dibuja_func(1:5, 6:10, col= "blue", pch=20)
+```
+
+Culaquier asignación ordinaria realizada dentro de una función es local y temporal, y se pierde tras salir de la función.
+
+**Ejemplo**
+
+```{r}
+x <- 7
+y <- 3
+producto <- function(a,b){x <- a*b; x}
+producto(x,y)
+x
+```
+
+Las variables que aparecen en el cuerpo de una función pueden ser de tres tipo:
+
+- *párámetros formales*: son los argumentos de la función. Su valor queda determinado en el proceso de invocado de la función.
+- *varaibles locales*: son aquellas cuyos valores quedan determinados al evaluar las distintas expresiones del ceurpo de la función.
+- *variables libres*: son el resto de variables. Las varaibles libres pasan a ser locales si se asignan de algún modo en el cuerpo de la functión.
+
+**Ejemplo**: Parámetros, varaibles locales y libres
+
+```{r}
+prueba1 <- function(x) {
+    y <- 2*x
+    print(x)
+    print(y)
+    print(z)
+}
+```
+
+En este ejemplo *x* es un parámetro formal, *y* es una varaible local y *z* es una varaible libre.
+Al invocar la función *prueba1*, R busca en primer lugar el valor de la variable *z* en el entorno que ha creado; como no la encuentra, pasa a buscarla en el exterior de la función. Finalmente, como sigue sin encontrarla, muestra un mensaje de error:
+
+```{r, error=TRUE}
+prueba1(5)
+```
+
+Si ahora definimos la varaible *z* fuera del ámbito de la funcion *prueba1* y volvemos a invocarla, esta vez R sí es capaz de econtrar dicha variable y puede mostrar su valor:
+
+```{r}
+z <- 1
+prueba1(5)
+```
+Supongamos que ahora definimos una nueva función *prueba2* como la sigueinte:
+
+```{r}
+prueba2 <- function(x) {
+    z <- 125980321654
+    print(paste("Dentro de prueba2, z=",toString(z)))
+    prueba1(z)
+}
+```
+
+Veamos qué sucede al invocarla:
+```{r}
+prueba2(5)
+```
+El valor de *z* que recibe la función *prueba1* que aparece en el cuerpo de la función *prueba2* es *z* = 125980321654, número al que primero duplica, lo muestra, imprime también su doble, y finalmente recupera el valor de la variable libre *z* tal y como se definió en el entorno donde se creó la función *prueba1*.
+
+**Ejemplo:**: Cubo de un número
+
+```{r, error=TRUE}
+eleva_cubo <- function(n) {
+    eleva_cuadrado <- function(n) {n*n}
+    n*eleva_cuadrado(n)
+    }
+eleva_cubo(2)
+
+```
+
+Comentar finalmente que las funciones también pueden definirse con carácter recursivo:
+
+**Ejemplo**: Factorial recursivo
+
+```{r}
+factorial_rec <- function(n){
+    if (n==1){output <- 1}
+    else {output <- n*factorial_rec(n-1)}
+    output
+}
+factorial_rec(1)
+factorial_rec(2)
+factorial_rec(3)
+factorial_rec(4)
+factorial_rec(5)
+factorial_rec(10)
+```
+
+## Ejercicios
+
+|**Ejercicio propuesto**: Conversión de divisa|
+|---------------------------------------------|
+|Construye una función que permita pasar de euros a dólares con eltipo de cambio actual.|
+
+```{r}
+
+```
+
+|**Ejercicio propuesto**: Serie de Leibniz|
+|------------------------------------------|
+|Construye una función que aproxime el valor de $\pi$ tomando tantos términos de la serie de Leibniz $$\sum_{n=0}^{\infty}\frac{(-1^n)}{2n+1}=\frac{\pi}{4}$$
+como desee el usuario. Mide el tiempo que le lleva a R ejecutar dicha función para un millon de términos, por medio del comando *system.time()*.|
+
+```{r}
+
+```
+
+|**Ejercicio propuesto**: Números primos|
+|-----------------------------------------------|
+|Escribe un código que, para los 500 primeros núemros naturales, nos muestre por pantalla si son primos o compuestos|
+
+```{r}
+
+```
+
+|**Ejercicio propeusto**: Comisión del reaseguro|
+|-------------------------------------------|
+|Supongamos que una compañía aseguradora tiene firmado un contrato de reaseguro proporcional, por el cual la cesionaria ha de devolver a la cedente al final del año una comisión que depende de la siniestralidad experimentada por esta última durante el ejercicio. Construye una función que permita obtener la comisión que habrá de recibir la aseguradora, si se pacta que ésta habrá de ser del 20% sobre las primas de reaseguro caundo la siniestralidad es inferior a 700.000€, del 5 % si excede los 2M€, y lineal en cualquier otro caso.|
+
+```{r}
+
+```
+
+|**Ejercicio propuesto**: Black-Scholes|
+|---------------------------------------|
+|Construye una función que permita obtener el precio de opciones europeas según la fórmula de Black-Scholes, tanto de compra como de venta:
+$$c=SN(d_1) - X_e^{-rT} N(d_2)$$ y $$p= X_e^{-rT}N(-d_2)-SN(-d_1)$$  
+siendo $d_1=\frac{ln(S/X)+(r+\sigma^2/2)T}{\sigma\sqrt{T}}$ y $d_2=d_1-\sigma\sqrt{T}$.
+**Indicación**. La funcion de R *pnorm()* se corresponde con la función de distribución de una normal.|
+
+```{r}
+
+```
+
+|**Ejercicio propuesto**: Potencia natural recursiona|
+|------------------------------------------|
+|Construye una función recursiova que permita calcular cualquier potencia natural de un número real.|
+
+```{r}
+
+```
 
 
 
